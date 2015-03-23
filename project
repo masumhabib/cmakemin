@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# FileName: project
+# Description: A script that creates a new cmake project 
+# 
+# Copyright (C) 2014  K M Masum Habib <masum.habib@gmail.com>
+#
+# Created: 23 March 2015.
+
+
+function usage(){
+    echo "Usage: ./project name [path]"
+    echo "  name: Name of the new project."
+    echo "  options: " 
+    echo "    path: Where to put the new project. Default: ../"
+    echo "    help: Shows this message."
+}
+
+function create_new(){
+    name=$1
+    dir=$2
+    dest=$dir/$name
+    src="./"
+
+    if [[ -e $dest ]]; then
+        echo "Path $dest already exists. Choose a different name."
+        exit -1
+    fi
+
+    echo "Creating dir $dest"
+
+    mkdir -p $dest
+    mkdir -p $dest/src
+    mkdir -p $dest/include
+    mkdir -p $dest/bin
+
+    echo "Setting project name $name"
+
+    projekt="projekt"
+    PROJEKT=`echo $projekt | tr '[:lower:]' '[:upper:]'`
+    NAME=`echo $name | tr '[:lower:]' '[:upper:]'`
+    for file in "build" "CMakeLists.txt" "README.md" "license.txt" "src/main.cpp" "include/main.h" "include/config.in.h"; do
+        echo "Creating $dest/$file ..."
+        sed -e "s/$PROJEKT/$NAME/g" -e "s/$projekt/$name/g" < $src/$file > $dest/$file 
+    done
+
+    chmod +x $dest/build
+
+    echo "Project $name creation done."
+}
+
+if [[ $# -eq 0 ]]; then
+    # No argument, run build the project
+    usage
+elif [[ $# -ge 1 ]]; then
+    name=$1
+    project_dir=".."
+    if [[ $opt == "help" ]]; then
+        usage
+    else
+        if [[ $# == 2 ]]; then
+            project_dir=$2
+        fi
+    fi
+    create_new $name $project_dir
+else
+    usage
+    exit -1
+fi
+
+
