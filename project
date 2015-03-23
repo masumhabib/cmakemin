@@ -39,12 +39,13 @@ function create_new(){
     projekt="projekt"
     PROJEKT=`echo $projekt | tr '[:lower:]' '[:upper:]'`
     NAME=`echo $name | tr '[:lower:]' '[:upper:]'`
-    for file in "build" "CMakeLists.txt" "README.md" "license.txt" "src/main.cpp" "include/main.h" "include/config.in.h"; do
+    for file in "build" "CMakeLists.txt" "license.txt" "README.md" "version" "include/main.h" "include/config.in.h" "src/main.cpp"; do
         echo "Creating $dest/$file ..."
         sed -e "s/$PROJEKT/$NAME/g" -e "s/$projekt/$name/g" < $src/$file > $dest/$file 
     done
 
     chmod +x $dest/build
+    chmod +x $dest/version
 
     echo "Project $name creation done."
 }
